@@ -19,6 +19,7 @@ limitations under the License.
 
 #include <cassert>
 #include <cstring>
+#include <iostream>
 #include <thread>
 
 #ifdef WITH_CUDA
@@ -197,11 +198,14 @@ void ShmQueue::Enqueue(size_t size, WriteFunc func) {
   // Check for ring buffer conflicts.
   while (block_id >= meta_->read_block_id_ + max_block_num_ ||
          end_offset >= meta_->released_offset_ + max_buf_size_) {
+    std::cout << "ShmQueue::Enqueue,  end_offset: " << end_offset << ", released_offset_: "<< meta_->released_offset_ <<", max_buf_size_: "<<max_buf_size_<<std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 
   auto& block = meta_->GetBlockMeta(block_id);
+  std::cout <<"Before: block.WaitForWriting();"<<std::endl;
   block.WaitForWriting();
+   std::cout <<"After: block.WaitForWriting();"<<std::endl;
 
   auto* shm_write_ptr = meta_->GetData(data_offset);
   func(shm_write_ptr);

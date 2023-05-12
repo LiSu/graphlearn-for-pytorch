@@ -215,6 +215,8 @@ void ShmQueue::Enqueue(size_t size, WriteFunc func) {
   block.end = end_offset;
 
   block.NotifyToRead();
+  enqueue_num_++;
+  std::cout <<"Enqueue: enqueue_num_: "<<enqueue_num_<<std::endl;
 }
 
 ShmData ShmQueue::Dequeue() {
@@ -228,6 +230,8 @@ ShmData ShmQueue::Dequeue() {
 
   auto* shm_read_ptr = meta_->GetData(block.data);
   auto shm_data_size = block.end - block.data;
+  dequeue_num_++;
+  std::cout <<"Dequeue: dequeue_num_: "<<dequeue_num_<<std::endl;
   return {shm_read_ptr, shm_data_size, block_id, meta_};
 }
 

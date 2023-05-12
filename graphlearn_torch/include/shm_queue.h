@@ -220,6 +220,8 @@ private:
   size_t max_buf_size_;
   size_t shm_size_;
   int    shmid_;
+  int    enqueue_num_ = 0;
+  int    dequeue_num_ = 0;
 
   /// Deleter to release shared memory when the underlying meta is shared
   /// by multiple shared_ptrs.

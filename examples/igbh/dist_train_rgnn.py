@@ -221,9 +221,9 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
               str(datetime.timedelta(seconds = int(time.time() - epoch_start))),
               gpu_mem_alloc
           )
-        print("Process ID:", os.getpid(), "eveluate done.")
       )
-      print("Process ID:", os.getpid(), "epoch done.")
+      print("Process ID:", os.getpid(), "eveluate done.")
+    print("Process ID:", os.getpid(), "epoch done.")
 
   model.eval()
   test_acc = evaluate(model, test_loader).item()*100

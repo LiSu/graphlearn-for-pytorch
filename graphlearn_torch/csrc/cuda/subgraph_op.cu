@@ -27,7 +27,6 @@ limitations under the License.
 
 namespace graphlearn_torch {
 
-constexpr int32_t BLOCK_SIZE = 128;
 constexpr int32_t WARP_SIZE = 32;
 constexpr int32_t BLOCK_WARPS = 4;
 // The number of rows covered by each threadblock.

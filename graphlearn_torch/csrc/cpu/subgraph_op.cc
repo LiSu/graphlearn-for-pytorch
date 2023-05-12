@@ -72,7 +72,7 @@ void CPUSubGraphOp::Induce(const std::vector<int64_t>& nodes,
   out_cols.reserve(node_size * node_size);
   if (with_edge) out_eids.reserve(node_size * node_size);
 
-  for (int32_t i = 0; i < node_size; ++i) {
+  for (uint32_t i = 0; i < node_size; ++i) {
     auto old_row = nodes[i];
     if (old_row < row_count) {
       for (int32_t j = indptr[old_row]; j < indptr[old_row+1]; ++j) {

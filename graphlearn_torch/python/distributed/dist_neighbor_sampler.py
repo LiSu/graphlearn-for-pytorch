@@ -192,6 +192,7 @@ class DistNeighborSampler(ConcurrentEventLoop):
     """
     inputs = NodeSamplerInput.cast(inputs)
     if self.channel is None:
+      import os
       print("Process id: ", os.getpid(), " before run task")
       ret = self.run_task(coro=self._send_adapter(self._sample_from_nodes,
                                                    inputs))

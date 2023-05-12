@@ -37,11 +37,14 @@ def evaluate(model, dataloader):
   predictions = []
   labels = []
   with torch.no_grad():
+    idx = 0
     for batch in dataloader:
       batch_size = batch['paper'].batch_size
       out = model(batch.x_dict, batch.edge_index_dict)[:batch_size]
       labels.append(batch['paper'].y[:batch_size].cpu().numpy())
       predictions.append(out.argmax(1).cpu().numpy())
+      idx += 1
+      print("Process ID:", os.getpid(), "eveluate batch idx: ", idx)
 
     predictions = np.concatenate(predictions)
     labels = np.concatenate(labels)

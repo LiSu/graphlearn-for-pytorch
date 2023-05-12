@@ -167,14 +167,14 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
 
   best_accuracy = 0
   training_start = time.time()
-  for epoch in range(epochs):
+  for epoch in tqdm.tqdm(range(epochs)):
     model.train()
     total_loss = 0
     train_acc = 0
     idx = 0
     gpu_mem_alloc = 0
     epoch_start = time.time()
-    for batch in tqdm.tqdm(enumerate(train_loader)):
+    for batch in train_loader:
       idx += 1
       batch_size = batch['paper'].batch_size
       out = model(batch.x_dict, batch.edge_index_dict)[:batch_size]
@@ -200,13 +200,17 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
       torch.distributed.barrier()
       print("Process ID:", os.getpid(), "sync and barrier done.")
     if epoch%log_every == 0:
+      print("Process ID:", os.getpid(), "in evelauate.")
       model.eval()
+      print("Process ID:", os.getpid(), "A")
       val_acc = evaluate(model, val_loader).item()*100
+      print("Process ID:", os.getpid(), "B")
       if best_accuracy < val_acc:
         best_accuracy = val_acc
       if with_gpu:
         torch.cuda.synchronize()
         torch.distributed.barrier()
+        print("Process ID:", os.getpid(), "C")
       tqdm.tqdm.write(
           "Rank{:02d} | Epoch {:03d} | Loss {:.4f} | Train Acc {:.2f} | Val Acc {:.2f} | Time {} | GPU {:.1f} MB".format(
               current_ctx.rank,
@@ -217,6 +221,7 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
               str(datetime.timedelta(seconds = int(time.time() - epoch_start))),
               gpu_mem_alloc
           )
+        print("Process ID:", os.getpid(), "eveluate done.")
       )
       print("Process ID:", os.getpid(), "epoch done.")
 

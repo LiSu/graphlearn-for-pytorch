@@ -48,6 +48,9 @@ class ConcurrentEventLoop(object):
     self._loop = asyncio.new_event_loop()
     self._runner_t = Thread(target=self._run_loop)
     self._runner_t.daemon = True
+    self._batch_num = 0
+    self._exec_task_num = 0
+    self._completed_task_num = 0
 
   def start_loop(self):
     if not self._runner_t.is_alive():
@@ -87,8 +90,14 @@ class ConcurrentEventLoop(object):
       except Exception as e:
         logging.error("coroutine task failed: %s", e)
       self._sem.release()
+      self._completed_task_num += 1
+      print("completed_task_num: " + str(self._completed_task_num))
+    self._batch_num += 1
+    print("batch_num: " + str(self._batch_num))
     self._sem.acquire()
     fut = asyncio.run_coroutine_threadsafe(coro, self._loop)
+    self._exec_task_num += 1
+    print("exec_task_num: " + str(self._exec_task_num))
     fut.add_done_callback(on_done)
 
   def run_task(self, coro):

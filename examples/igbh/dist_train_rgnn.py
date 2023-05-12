@@ -207,8 +207,7 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
       print("Process ID:", os.getpid(), "in evelauate.")
       model.eval()
       print("Process ID:", os.getpid(), "A")
-      ## val_acc = evaluate(model, val_loader).item()*100
-      val_acc = 0
+      val_acc = evaluate(model, val_loader).item()*100
       print("Process ID:", os.getpid(), "B")
       if best_accuracy < val_acc:
         best_accuracy = val_acc
@@ -231,8 +230,7 @@ def run_training_proc(local_proc_rank, num_nodes, node_rank, num_training_procs,
     print("Process ID:", os.getpid(), "epoch done.")
 
   model.eval()
-  ## test_acc = evaluate(model, test_loader).item()*100
-  test_acc = 0
+  test_acc = evaluate(model, test_loader).item()*100
   print("Rank {:02d} Test Acc {:.2f}%".format(current_ctx.rank, test_acc))
   print("Total time taken " + str(datetime.timedelta(seconds = int(time.time() - training_start))))
 
